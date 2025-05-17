@@ -1,0 +1,52 @@
+import numpy as np
+
+def orthogonal_diagonalization():
+    print("Enter a 3x3 symmetric matrix (row by row, comma-separated):")
+    A = []
+    for i in range(3):
+        row = list(map(float, input(f"Row {i+1}: ").split(',')))
+        if len(row) != 3:
+            print("❌ Each row must have 3 elements.")
+            return
+        A.append(row)
+    A = np.array(A)
+
+    print("\nMatrix A:")
+    print(A)
+
+    # Check if symmetric
+    if not np.allclose(A, A.T):
+        print("\n❌ Matrix A is not symmetric. Orthogonal diagonalization is not possible.")
+        return
+    else:
+        print("\n✅ Matrix A is symmetric. Proceeding with orthogonal diagonalization...")
+
+    # Step 1: Compute eigenvalues and eigenvectors
+    eigenvalues, eigenvectors = np.linalg.eigh(A)  # 'eigh' guarantees real eigenvalues for symmetric matrices
+
+    print("\nStep 1: Eigenvalues:")
+    print(np.round(eigenvalues, 4))
+
+    print("\nStep 2: Corresponding Orthonormal Eigenvectors (columns of P):")
+    P = eigenvectors
+    print(np.round(P, 4))
+
+    # Step 3: Diagonal matrix D
+    D = np.diag(eigenvalues)
+    print("\nStep 3: Diagonal Matrix D (with eigenvalues):")
+    print(np.round(D, 4))
+
+    # Step 4: Transpose of P
+    PT = P.T
+    print("\nStep 4: Transpose of P (Pᵀ):")
+    print(np.round(PT, 4))
+
+    # Step 5: Reconstruct A = P * D * P^T
+    A_reconstructed = P @ D @ PT
+    print("\nStep 5: Reconstructed A using P * D * Pᵀ:")
+    print(np.round(A_reconstructed, 4))
+
+    print("\n✅ Orthogonal Diagonalization Completed Successfully.")
+
+# Run the function
+orthogonal_diagonalization()

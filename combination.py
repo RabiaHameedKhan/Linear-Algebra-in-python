@@ -5,16 +5,13 @@ def gaussian_elimination(matrix):
     rows, cols = matrix.shape
 
     for i in range(min(rows, cols-1)):
-        # Pivot
         max_row = i + np.argmax(np.abs(matrix[i:, i]))
         if matrix[max_row, i] == 0:
             continue
         matrix[[i, max_row]] = matrix[[max_row, i]]
 
-        # Make leading 1
         matrix[i] = matrix[i] / matrix[i, i]
 
-        # Eliminate below
         for j in range(i+1, rows):
             matrix[j] = matrix[j] - matrix[j, i] * matrix[i]
 
@@ -73,17 +70,24 @@ def solve_linear_combination():
     for idx, val in enumerate(solution):
         print(f"k{idx+1} = {val}")
 
-    # Spanning Test: Calculate the determinant of the matrix formed by vectors
-    det = np.linalg.det(vectors)
-    if np.isclose(det, 0):
-        print("\nSpanning not Possible.")
-    else:
-        print("\nSpanning is possible.")
-
-        # Linear Independence Test: If the determinant is non-zero, the vectors are linearly independent
-        if not np.isclose(det, 0):
+    # Spanning Test
+    det_possible = vectors.shape[0] == vectors.shape[1]  # square matrix
+    if det_possible:
+        det = np.linalg.det(vectors)
+        if np.isclose(det, 0):
+            print("\nSpanning not Possible.")
+        else:
+            print("\nSpanning is possible.")
             print("\nThe vectors are linearly independent.")
             print("\nBasis can be formed.")
+
+            # Coordinates of W relative to the basis {U1, U2, ..., Un}
+            print("\nCoordinates of W with respect to the given basis:")
+            for idx, val in enumerate(solution):
+                print(f"Coordinate along U{idx+1} = {val}")
+    else:
+        print("\nCannot compute determinant: Vectors do not form a square matrix.")
+        print("Check if the number of vectors equals the dimension for basis formation.")
 
 # Run the function
 solve_linear_combination()
